@@ -7,7 +7,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-
   try {
 
     const body = await request.json();
@@ -19,6 +18,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(note, {status: 201});
   } catch (error) {
+    console.log(error);
     return NextResponse.json({message: "Erro ao criar palavra", status: 500} );
   }
 }
