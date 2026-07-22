@@ -5,71 +5,51 @@ import { getNotes, createNote } from "@/app/stores/note.store";
 
 export default function NotesPage() {
 
-  const [notes, setNotes] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const [form, setForm] = useState({
+  const notesData = {
     word: "",
     mean: "",
     description: "",
-  });
+  };
+  const [notes, setNotes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [validations, setValidations] = useState(notesData);
+
+  const [form, setForm] = useState(notesData);
 
 
   async function loadNotes() {
     try {
       const data = await getNotes();
-
       setNotes(data);
-
     } catch (error) {
       setError("Não foi possível carregar as palavras.");
-
     } finally {
       setLoading(false);
     }
   }
 
 
-  useEffect(() => {
-    loadNotes();
-  }, []);
-
-
-
-  async function handleSubmit(e) {
+  async function save(e) {
     e.preventDefault();
 
-    // if (
-    //   !form.word.trim() ||
-    //   !form.mean.trim() ||
-    //   !form.description.trim()
-    // ) {
-    //   setError("Todos os campos são obrigatórios.");
-    //   return;
-    // }
-
-
     try {
-
       await createNote(form);
-
-      setForm({
-        word: "",
-        mean: "",
-        description: "",
-      });
-
+      setForm(notesData);
       setError("");
-
       await loadNotes();
-
     } catch (error) {
+      setValidations(error?.response?.data)
+
+
+      console.log("Validações", validations);
       setError("Não foi possível guardar a palavra.");
     }
   }
 
-
+  useEffect(() => {
+    loadNotes();
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-10">
@@ -132,7 +112,7 @@ export default function NotesPage() {
 
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={save}
             className="space-y-4"
           >
 
@@ -160,7 +140,7 @@ export default function NotesPage() {
                     word: e.target.value,
                   })
                 }
-                required
+                
                 className="
                   w-full
                   rounded-lg
@@ -206,7 +186,7 @@ export default function NotesPage() {
                     mean: e.target.value,
                   })
                 }
-                required
+                
                 className="
                   w-full
                   rounded-lg
@@ -251,7 +231,7 @@ export default function NotesPage() {
                     description: e.target.value,
                   })
                 }
-                required
+                
                 rows={3}
                 className="
                   w-full
