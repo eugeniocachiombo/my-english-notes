@@ -1,7 +1,9 @@
 import prisma from "../lib/prisma";
 
 export async function list() {
-  return prisma.note.findMany();
+  return prisma.note.findMany({
+    orderBy: { id: "desc"},
+  });
 }
 
 export async function create(data) {
