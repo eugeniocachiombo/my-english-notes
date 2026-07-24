@@ -109,7 +109,7 @@ export default function NotesPage() {
           <form onSubmit={save} className="space-y-4">
             <div>
               <label className=" mb-1 block text-sm font-medium text-gray-600">
-                Palavra
+                Palavra ou Frase
               </label>
 
               <input
