@@ -14,6 +14,7 @@ export default function NotesPage() {
   const [error, setError] = useState("");
   const [validations, setValidations] = useState(notesData);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState({});
 
   const [form, setForm] = useState(notesData);
 
@@ -46,9 +47,19 @@ export default function NotesPage() {
     }
   }
 
-  useEffect(() => {
-    loadNotes();
-  }, []);
+  async function remove(id: number) {
+    setDeleting({ [id]: true });
+    try {
+      console.log(deleting);
+    } catch (error) {
+      console.log(error);
+      setError("Não foi possível eliminar");
+    } finally {
+     setDeleting({ [id]: false });
+    }
+  }
+
+  useEffect(() => { loadNotes(); }, []);
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-10">
@@ -168,22 +179,32 @@ export default function NotesPage() {
 
         {/* Lista */}
         {!loading && (
-          <div className=" grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {notes.map((note) => (
               <article
                 key={note.id}
-                className=" rounded-2xl border border-gray-100 bg-white 
-                p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
-                <h2 className=" text-xl font-bold text-gray-900">
-                  {note.word}
-                </h2>
+                <h2 className="text-xl font-bold text-gray-900">{note.word}</h2>
 
-                <p className=" mt-3 text-gray-700">{note.mean}</p>
+                <p className="mt-3 text-gray-700">{note.mean}</p>
 
-                <p className=" mt-2 text-sm text-gray-500">
-                  {note.description}
-                </p>
+                <p className="mt-2 text-sm text-gray-500">{note.description}</p>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    disabled={deleting[note.id]}
+                    onClick={() => remove(note.id)}
+                    className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
+                  >
+                    {deleting[note.id] && (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    )}
+
+                    {deleting[note.id] ? "Eliminando..." : "Eliminar"}
+                  </button>
+                </div>
               </article>
             ))}
           </div>
