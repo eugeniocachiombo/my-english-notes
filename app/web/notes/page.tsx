@@ -7,7 +7,7 @@ import { getNotes, createNote, updateNote, removeNote } from "@/app/stores/note.
 
 export default function NotesPage() {
   const notesData = {
-    id: null,
+    id: 0,
     word: '',
     mean: '',
     description: '',
