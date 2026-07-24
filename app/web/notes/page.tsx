@@ -3,7 +3,7 @@
 import Swal from "sweetalert2";
 import { alert_error, alert_success } from "@/app/services/sweet-alert.service";
 import { useEffect, useState } from "react";
-import { getNotes, createNote, removeNote } from "@/app/stores/note.store";
+import { getNotes, createNote, updateNote, removeNote } from "@/app/stores/note.store";
 
 export default function NotesPage() {
   const notesData = {
@@ -37,16 +37,21 @@ export default function NotesPage() {
     setSaving(true);
 
     try {
-      await createNote(form);
-      setForm(notesData);
+      if(form.id){
+        await updateNote(form);
+      }else{
+        await createNote(form);
+      }
+
       alert_success();
-      await loadNotes();
+      setForm(notesData);
     } catch (error) {
       setValidations(error?.response?.data);
-      console.log("Validações", validations);
+      // console.log("Validações", validations);
       alert_error();
     } finally {
       setSaving(false);
+      await loadNotes();
     }
   }
 
@@ -63,7 +68,7 @@ export default function NotesPage() {
     }
   }
 
-   async function confirmRemove(id) {
+  async function confirmRemove(id) {
     Swal.fire({
       title: "Tem certeza?",
       text: "Esta ação não pode ser desfeita!",
@@ -75,6 +80,15 @@ export default function NotesPage() {
       if (result.isConfirmed) {
         remove(id)        
       }
+    });
+  }
+
+  async function setEdit(note) {
+    setForm({
+      id: note.id ?? '',
+      word: note.word ?? '',
+      mean: note.mean ?? '',
+      description: note.description ?? '',
     });
   }
 
@@ -213,9 +227,19 @@ export default function NotesPage() {
 
                 <p className="mt-2 text-sm text-gray-500">{note.description}</p>
 
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex gap-3 justify-end">
                   <button
                     type="button"
+                    style={{cursor:'pointer'}}
+                    onClick={() => setEdit(note)}
+                    className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-60"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    type="button"
+                    style={{cursor:'pointer'}}
                     disabled={deleting[note.id]}
                     onClick={() => confirmRemove(note.id)}
                     className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
