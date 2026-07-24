@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getNotes, createNote } from "@/app/stores/note.store";
+import { getNotes, createNote, removeNote } from "@/app/stores/note.store";
 
 export default function NotesPage() {
   const notesData = {
@@ -11,7 +11,7 @@ export default function NotesPage() {
   };
   const [notes, setNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState({});
   const [validations, setValidations] = useState(notesData);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState({});
@@ -23,7 +23,11 @@ export default function NotesPage() {
       const data = await getNotes();
       setNotes(data);
     } catch (error) {
-      setError("Não foi possível carregar as palavras.");
+      console.log(error)
+      setMessage({
+        'type': 'error',
+        'content': 'Não foi possível carregar as palavras.'
+      });
     } finally {
       setLoading(false);
     }
@@ -36,26 +40,40 @@ export default function NotesPage() {
     try {
       await createNote(form);
       setForm(notesData);
-      setError("");
+      setMessage({
+        'type': 'success',
+        'content': 'Gravado com sucesso.'
+      });
       await loadNotes();
     } catch (error) {
       setValidations(error?.response?.data);
       console.log("Validações", validations);
-      setError("Não foi possível guardar a palavra.");
+      setMessage({
+        'type': 'error',
+        'content': 'Impossível Guardar a Palavra.'
+      });
     } finally {
       setSaving(false);
     }
   }
 
   async function remove(id: number) {
-    setDeleting({ [id]: true });
+      setDeleting({ [id]: true });
     try {
-      console.log(deleting);
+      await removeNote(id);
+      setMessage({
+        'type': 'success',
+        'content': 'Eliminado com sucesso.'
+      });
+      await loadNotes();
     } catch (error) {
-      console.log(error);
-      setError("Não foi possível eliminar");
+      setMessage({
+        'type': 'error',
+        'content': 'Impossível Eliminar a Palavra.'
+      });
     } finally {
-     setDeleting({ [id]: false });
+      await loadNotes();
+      setDeleting({ [id]: false });
     }
   }
 
@@ -73,11 +91,14 @@ export default function NotesPage() {
         </div>
 
         {/* Mensagem de erro */}
-        {error && (
-          <div className=" mb-6 rounded-lg bg-red-100 px-4 py-3 text-red-700">
-            {error}
-          </div>
-        )}
+        { message.type && (message.type == 'success'  && message.content.length > 0
+          ? <div className=" mb-6 rounded-lg bg-green-700 px-4 py-3 ">
+            {message.content}
+          </div> 
+          : <div className=" mb-6 rounded-lg bg-red-100 px-4 py-3 text-red-700">
+            {message.content}
+          </div> )
+        }
 
         {/* Formulário */}
         <div className=" mb-10 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">

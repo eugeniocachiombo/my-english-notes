@@ -1,22 +1,21 @@
-import { list, create } from "@/app/repositories/note.repository";
+import { list, create, remove } from "@/app/repositories/note.repository";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import {errorZodMessages} from '@/app/services/zod.services'
 
 
 const noteValidator = z.object({
-  word: z
-    .string()
-    .min(1, "A palavra é obrigatória."),
-
-  mean: z
-    .string()
-    .min(1, "O significado é obrigatório."),
+  word: z.string().min(1, "A palavra ou frase é obrigatória."),
+  mean: z.string().min(1, "O significado é obrigatório."),
 });
 
 export async function GET() {
-  const data = await list();
-  return NextResponse.json(data);
+  try { 
+    const data = await list();
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ message: "Erro ao eliminar palavra", status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
@@ -28,5 +27,15 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof z.ZodError) { return errorZodMessages(error); }
     return NextResponse.json({ message: "Erro ao criar palavra", status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const data = await request.json();
+    const note = await remove(data.id);
+    return NextResponse.json(note, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: "Erro ao eliminar palavra" , status: 500 });
   }
 }

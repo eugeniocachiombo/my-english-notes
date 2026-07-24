@@ -7,3 +7,9 @@ export async function list() {
 export async function create(data) {
   return prisma.note.create({data});
 }
+
+export async function remove(id) {
+  return prisma.note.delete({
+    where: { id },
+  });
+}

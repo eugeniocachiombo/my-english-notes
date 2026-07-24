@@ -10,3 +10,9 @@ export async function getNotes() {
 export async function createNote(note: object) {
   return await axios.post(url, note);
 }
+
+export async function removeNote(id: number){
+  return await axios.delete(url, {
+    data: { id }
+  });
+}
