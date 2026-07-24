@@ -13,6 +13,7 @@ export default function NotesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [validations, setValidations] = useState(notesData);
+  const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState(notesData);
 
@@ -29,6 +30,7 @@ export default function NotesPage() {
 
   async function save(e) {
     e.preventDefault();
+    setSaving(true);
 
     try {
       await createNote(form);
@@ -39,6 +41,8 @@ export default function NotesPage() {
       setValidations(error?.response?.data);
       console.log("Validações", validations);
       setError("Não foi possível guardar a palavra.");
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -132,9 +136,22 @@ export default function NotesPage() {
               />
             </div>
 
-            <button type="submit"
-              className=" rounded-lg bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-700">
-              Guardar Palavra
+            <button
+              type="submit"
+              disabled={saving}
+              style={{ cursor: saving ? "not-allowed" : "pointer" }}
+              className={`flex items-center gap-2 rounded-lg px-5 py-2 font-medium text-white transition
+              ${
+                saving
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {saving && (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+              )}
+
+              {saving ? "Guardando..." : "Guardar Palavra"}
             </button>
           </form>
         </div>
@@ -142,34 +159,33 @@ export default function NotesPage() {
         {/* Carregamento */}
         {loading && (
           <div className="flex justify-center py-10">
-            <div className=" h-10 w-10 animate-spin rounded-full
-             border-4 border-blue-500 border-t-transparent"/>
+            <div
+              className=" h-10 w-10 animate-spin rounded-full
+             border-4 border-blue-500 border-t-transparent"
+            />
           </div>
         )}
 
         {/* Lista */}
         {!loading && (
           <div className=" grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
             {notes.map((note) => (
-              <article key={note.id}
+              <article
+                key={note.id}
                 className=" rounded-2xl border border-gray-100 bg-white 
-                p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-
+                p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              >
                 <h2 className=" text-xl font-bold text-gray-900">
                   {note.word}
                 </h2>
 
-                <p className=" mt-3 text-gray-700">
-                  {note.mean}
-                </p>
+                <p className=" mt-3 text-gray-700">{note.mean}</p>
 
                 <p className=" mt-2 text-sm text-gray-500">
                   {note.description}
                 </p>
               </article>
             ))}
-
           </div>
         )}
       </div>
