@@ -5,6 +5,12 @@ import {errorZodMessages} from '@/app/services/zod.services'
 
 
 const noteValidator = z.object({
+  word: z.string().min(1, "A palavra ou frase é obrigatória."),
+  mean: z.string().min(1, "O significado é obrigatório."),
+  description: z.string().optional(),
+});
+
+const noteUpdateValidator = z.object({
   id: z.number().optional(),
   word: z.string().min(1, "A palavra ou frase é obrigatória."),
   mean: z.string().min(1, "O significado é obrigatório."),
@@ -36,7 +42,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const data = noteValidator.parse(body); // Validar campos
+    const data = noteUpdateValidator.parse(body); // Validar campos
     const note = await update(data);
     return NextResponse.json(note, { status: 200 });
   } catch (error) {
