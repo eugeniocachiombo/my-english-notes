@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getNotes, createNote } from "@/app/stores/note.store";
 
 export default function NotesPage() {
-
   const notesData = {
     word: "",
     mean: "",
@@ -17,7 +16,6 @@ export default function NotesPage() {
 
   const [form, setForm] = useState(notesData);
 
-
   async function loadNotes() {
     try {
       const data = await getNotes();
@@ -29,7 +27,6 @@ export default function NotesPage() {
     }
   }
 
-
   async function save(e) {
     e.preventDefault();
 
@@ -39,9 +36,7 @@ export default function NotesPage() {
       setError("");
       await loadNotes();
     } catch (error) {
-      setValidations(error?.response?.data)
-
-
+      setValidations(error?.response?.data);
       console.log("Validações", validations);
       setError("Não foi possível guardar a palavra.");
     }
@@ -53,83 +48,33 @@ export default function NotesPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-10">
-
       <div className="mx-auto max-w-5xl">
-
-
-        {/* Cabeçalho */}
         <div className="mb-8">
-
-          <h1 className="text-3xl font-bold text-gray-900">
-            Meu Dicionário
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Meu Dicionário</h1>
 
           <p className="mt-2 text-gray-600">
             Gerencie as suas palavras em inglês.
           </p>
-
         </div>
-
-
 
         {/* Mensagem de erro */}
         {error && (
-          <div className="
-            mb-6
-            rounded-lg
-            bg-red-100
-            px-4
-            py-3
-            text-red-700
-          ">
+          <div className=" mb-6 rounded-lg bg-red-100 px-4 py-3 text-red-700">
             {error}
           </div>
         )}
 
-
-
-
         {/* Formulário */}
-        <div className="
-          mb-10
-          rounded-2xl
-          border
-          border-gray-100
-          bg-white
-          p-6
-          shadow-sm
-        ">
-
-          <h2 className="
-            mb-5
-            text-xl
-            font-semibold
-            text-gray-800
-          ">
+        <div className=" mb-10 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <h2 className=" mb-5 text-xl font-semibold text-gray-800">
             Adicionar nova palavra
           </h2>
 
-
-
-          <form
-            onSubmit={save}
-            className="space-y-4"
-          >
-
-
-            {/* Palavra */}
+          <form onSubmit={save} className="space-y-4">
             <div>
-
-              <label className="
-                mb-1
-                block
-                text-sm
-                font-medium
-                text-gray-600
-              ">
+              <label className=" mb-1 block text-sm font-medium text-gray-600">
                 Palavra
               </label>
-
 
               <input
                 type="text"
@@ -140,42 +85,16 @@ export default function NotesPage() {
                     word: e.target.value,
                   })
                 }
-                
-                className="
-                  w-full
-                  rounded-lg
-                  border
-                  border-gray-300
-                  px-4
-                  py-2
-                  outline-none
-                  text-black
-                  focus:border-blue-500
-                  focus:ring-2
-                  focus:ring-blue-200
-                "
+                className=" w-full rounded-lg border border-gray-300 px-4 py-2 
+                outline-none text-black focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 placeholder="Exemplo: Beautiful"
               />
-
             </div>
 
-
-
-
-
-            {/* Significado */}
             <div>
-
-              <label className="
-                mb-1
-                block
-                text-sm
-                font-medium
-                text-gray-600
-              ">
+              <label className=" mb-1 block text-sm font-medium text-gray-600">
                 Significado
               </label>
-
 
               <input
                 type="text"
@@ -186,42 +105,16 @@ export default function NotesPage() {
                     mean: e.target.value,
                   })
                 }
-                
-                className="
-                  w-full
-                  rounded-lg
-                  border
-                  text-black
-                  border-gray-300
-                  px-4
-                  py-2
-                  outline-none
-                  focus:border-blue-500
-                  focus:ring-2
-                  focus:ring-blue-200
-                "
+                className=" w-full rounded-lg border text-black border-gray-300
+                 px-4 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 placeholder="Exemplo: Bonito"
               />
-
             </div>
 
-
-
-
-
-            {/* Descrição */}
             <div>
-
-              <label className="
-                mb-1
-                block
-                text-sm
-                font-medium
-                text-gray-600
-              ">
+              <label className=" mb-1 block text-sm font-medium text-gray-600">
                 Descrição
               </label>
-
 
               <textarea
                 value={form.description}
@@ -231,149 +124,55 @@ export default function NotesPage() {
                     description: e.target.value,
                   })
                 }
-                
                 rows={3}
-                className="
-                  w-full
-                  text-black
-                  resize-none
-                  rounded-lg
-                  border
-                  border-gray-300
-                  px-4
-                  py-2
-                  outline-none
-                  focus:border-blue-500
-                  focus:ring-2
-                  focus:ring-blue-200
-                "
+                className=" w-full text-black resize-none rounded-lg border 
+                border-gray-300 px-4 py-2 outline-none focus:border-blue-500 
+                focus:ring-2 focus:ring-blue-200"
                 placeholder="Explique o significado da palavra"
               />
-
             </div>
 
-
-
-
-
-            <button
-              type="submit"
-              className="
-                rounded-lg
-                bg-blue-600
-                px-5
-                py-2
-                font-medium
-                text-white
-                transition
-                hover:bg-blue-700
-              "
-            >
+            <button type="submit"
+              className=" rounded-lg bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-700">
               Guardar Palavra
             </button>
-
-
           </form>
-
         </div>
-
-
-
-
-
 
         {/* Carregamento */}
         {loading && (
-
           <div className="flex justify-center py-10">
-
-            <div className="
-              h-10
-              w-10
-              animate-spin
-              rounded-full
-              border-4
-              border-blue-500
-              border-t-transparent
-            " />
-
+            <div className=" h-10 w-10 animate-spin rounded-full
+             border-4 border-blue-500 border-t-transparent"/>
           </div>
-
         )}
-
-
-
-
-
-
 
         {/* Lista */}
         {!loading && (
-
-          <div className="
-            grid
-            gap-6
-            sm:grid-cols-2
-            lg:grid-cols-3
-          ">
-
+          <div className=" grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
             {notes.map((note) => (
+              <article key={note.id}
+                className=" rounded-2xl border border-gray-100 bg-white 
+                p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
 
-              <article
-                key={note.id}
-                className="
-                  rounded-2xl
-                  border
-                  border-gray-100
-                  bg-white
-                  p-6
-                  shadow-sm
-                  transition
-                  hover:-translate-y-1
-                  hover:shadow-lg
-                "
-              >
-
-
-                <h2 className="
-                  text-xl
-                  font-bold
-                  text-gray-900
-                ">
+                <h2 className=" text-xl font-bold text-gray-900">
                   {note.word}
                 </h2>
 
-
-                <p className="
-                  mt-3
-                  text-gray-700
-                ">
+                <p className=" mt-3 text-gray-700">
                   {note.mean}
                 </p>
 
-
-                <p className="
-                  mt-2
-                  text-sm
-                  text-gray-500
-                ">
+                <p className=" mt-2 text-sm text-gray-500">
                   {note.description}
                 </p>
-
-
               </article>
-
             ))}
 
-
           </div>
-
         )}
-
-
       </div>
-
     </main>
   );
 }
