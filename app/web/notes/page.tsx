@@ -1,15 +1,18 @@
 "use client";
 
+import Swal from "sweetalert2";
+import { alert_error, alert_success } from "@/app/services/sweet-alert.service";
 import { useEffect, useState } from "react";
 import { getNotes, createNote, removeNote } from "@/app/stores/note.store";
 
 export default function NotesPage() {
   const notesData = {
-    word: "",
-    mean: "",
-    description: "",
+    id: null,
+    word: '',
+    mean: '',
+    description: '',
   };
-  const [notes, setNotes] = useState<any[]>([]);
+  const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({});
   const [validations, setValidations] = useState(notesData);
@@ -23,11 +26,7 @@ export default function NotesPage() {
       const data = await getNotes();
       setNotes(data);
     } catch (error) {
-      console.log(error)
-      setMessage({
-        'type': 'error',
-        'content': 'Não foi possível carregar as palavras.'
-      });
+      alert_error();
     } finally {
       setLoading(false);
     }
@@ -40,41 +39,43 @@ export default function NotesPage() {
     try {
       await createNote(form);
       setForm(notesData);
-      setMessage({
-        'type': 'success',
-        'content': 'Gravado com sucesso.'
-      });
+      alert_success();
       await loadNotes();
     } catch (error) {
       setValidations(error?.response?.data);
       console.log("Validações", validations);
-      setMessage({
-        'type': 'error',
-        'content': 'Impossível Guardar a Palavra.'
-      });
+      alert_error();
     } finally {
       setSaving(false);
     }
   }
 
-  async function remove(id: number) {
-      setDeleting({ [id]: true });
+  async function remove(id) {
     try {
       await removeNote(id);
-      setMessage({
-        'type': 'success',
-        'content': 'Eliminado com sucesso.'
-      });
-      await loadNotes();
+      alert_success();
+      setForm(notesData);
     } catch (error) {
-      setMessage({
-        'type': 'error',
-        'content': 'Impossível Eliminar a Palavra.'
-      });
+      alert_error();
     } finally {
-      await loadNotes();
       setDeleting({ [id]: false });
+      await loadNotes();
     }
+  }
+
+   async function confirmRemove(id) {
+    Swal.fire({
+      title: "Tem certeza?",
+      text: "Esta ação não pode ser desfeita!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, eliminar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        remove(id)        
+      }
+    });
   }
 
   useEffect(() => { loadNotes(); }, []);
@@ -216,7 +217,7 @@ export default function NotesPage() {
                   <button
                     type="button"
                     disabled={deleting[note.id]}
-                    onClick={() => remove(note.id)}
+                    onClick={() => confirmRemove(note.id)}
                     className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
                   >
                     {deleting[note.id] && (
