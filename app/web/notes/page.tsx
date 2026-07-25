@@ -618,7 +618,7 @@ export default function NotesPage() {
                 ) : (
                   <Plus className="h-4 w-4" />
                 )}
-                {saving ? "Guardando..." : isEditing ? "Guardar Alterações" : "Guardar Palavra"}
+                {saving ? "Guardando..." : isEditing ? "Alterar" : "Guardar"}
               </button>
 
               <button
