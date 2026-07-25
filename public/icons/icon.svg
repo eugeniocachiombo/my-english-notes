@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34D399"/>
+      <stop offset="1" stop-color="#047857"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="30%" cy="18%" r="60%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#sheen)"/>
+
+  <!-- Open book -->
+  <g>
+    <path d="M256,206 C256,206 203,176 146,180 C122,182 111,190 111,203
+             L111,344 C111,357 122,364 146,362 C203,358 256,388 256,388 Z"
+          fill="#ffffff" opacity="0.97"/>
+    <path d="M256,206 C256,206 309,176 366,180 C390,182 401,190 401,203
+             L401,344 C401,357 390,364 366,362 C309,358 256,388 256,388 Z"
+          fill="#ffffff" opacity="0.97"/>
+    <line x1="256" y1="206" x2="256" y2="388" stroke="#047857" stroke-width="5" stroke-linecap="round" opacity="0.35"/>
+
+    <!-- Suggestion of written lines on the pages -->
+    <path d="M146,232 C176,229 206,234 226,246" stroke="#A7F3D0" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9"/>
+    <path d="M146,262 C176,259 200,263 218,273" stroke="#A7F3D0" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.75"/>
+    <path d="M366,232 C336,229 306,234 286,246" stroke="#A7F3D0" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9"/>
+    <path d="M366,262 C336,259 312,263 294,273" stroke="#A7F3D0" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.75"/>
+  </g>
+
+  <!-- Bookmark ribbon marking a new word -->
+  <path d="M222,84 L290,84 L290,244 L256,213 L222,244 Z" fill="url(#ribbon)"/>
+</svg>
