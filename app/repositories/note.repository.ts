@@ -6,18 +6,18 @@ export async function list() {
   });
 }
 
-export async function create(data) {
+export async function create(data:any) {
   return prisma.note.create({data});
 }
 
-export async function update(data) {
+export async function update(data:any) {
   return prisma.note.update({
     where: { id: data.id},
     data: data,
   });
 }
 
-export async function remove(id) {
+export async function remove(id:number) {
   return prisma.note.delete({
     where: { id },
   });

@@ -32,7 +32,7 @@ export default function NotesPage() {
     }
   }
 
-  async function save(e) {
+  async function save(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
 
@@ -45,7 +45,7 @@ export default function NotesPage() {
 
       alert_success();
       setForm(notesData);
-    } catch (error) {
+    } catch (error:any) {
       setValidations(error?.response?.data);
       // console.log("Validações", validations);
       alert_error();
@@ -55,12 +55,12 @@ export default function NotesPage() {
     }
   }
 
-  async function remove(id) {
+  async function remove(id:number) {
     try {
       await removeNote(id);
       alert_success();
       setForm(notesData);
-    } catch (error) {
+    } catch (error:any) {
       alert_error();
     } finally {
       setDeleting({ [id]: false });
@@ -68,7 +68,7 @@ export default function NotesPage() {
     }
   }
 
-  async function confirmRemove(id) {
+  async function confirmRemove(id:number) {
     Swal.fire({
       title: "Tem certeza?",
       text: "Esta ação não pode ser desfeita!",
@@ -83,7 +83,7 @@ export default function NotesPage() {
     });
   }
 
-  async function setEdit(note) {
+  async function setEdit(note:any) {
     setForm({
       id: note.id ?? '',
       word: note.word ?? '',
