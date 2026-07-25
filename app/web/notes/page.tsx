@@ -14,10 +14,10 @@ export default function NotesPage() {
   };
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState({});
+  const [message, setMessage] = useState<any>({});
   const [validations, setValidations] = useState(notesData);
   const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState({});
+  const [deleting, setDeleting] = useState<any>({});
 
   const [form, setForm] = useState(notesData);
 
@@ -104,16 +104,6 @@ export default function NotesPage() {
             Gerencie as suas palavras em inglês.
           </p>
         </div>
-
-        {/* Mensagem de erro */}
-        { message.type && (message.type == 'success'  && message.content.length > 0
-          ? <div className=" mb-6 rounded-lg bg-green-700 px-4 py-3 ">
-            {message.content}
-          </div> 
-          : <div className=" mb-6 rounded-lg bg-red-100 px-4 py-3 text-red-700">
-            {message.content}
-          </div> )
-        }
 
         {/* Formulário */}
         <div className=" mb-10 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
@@ -216,7 +206,7 @@ export default function NotesPage() {
         {/* Lista */}
         {!loading && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {notes.map((note) => (
+            {notes.map((note:any) => (
               <article
                 key={note.id}
                 className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
