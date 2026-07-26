@@ -44,7 +44,7 @@ export default function NotesPage() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<any>({});
-  const [validations, setValidations] = useState(notesData);
+  const [validations, setValidations] = useState({});
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<any>({});
 
@@ -56,6 +56,7 @@ export default function NotesPage() {
   const [sortBy, setSortBy] = useState<"recent" | "oldest" | "az">("az");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  
 
   // Painel de adicionar/editar, estilo "bottom sheet" de app móvel
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -106,13 +107,20 @@ export default function NotesPage() {
       setForm(notesData);
       setSheetOpen(false);
     } catch (error: any) {
-      setValidations(error?.response?.data);
+
+      if (error?.response?.status  == 422) {
+        setValidations(error?.response?.data?.errors);
+        return;
+      }
+      
       alert_error();
     } finally {
       setSaving(false);
       await loadNotes();
     }
   }
+
+  
 
   async function remove(id: number) {
     try {
@@ -569,6 +577,12 @@ export default function NotesPage() {
                 className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-black outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
                 placeholder="Exemplo: Beautiful"
               />
+             
+             {validations && Object.keys(validations).length != 0 && (
+                <span className="mt-1 block text-xs font-medium text-rose-500">
+                  { (validations?.filter((e:any)=>e.path=='word'))[0]?.message }
+                </span>
+              )} 
             </div>
 
             <div>
@@ -583,6 +597,12 @@ export default function NotesPage() {
                 className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-black outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
                 placeholder="Exemplo: Bonito"
               />
+
+              {validations &&  Object.keys(validations).length != 0 && (
+                <span className="mt-1 block text-xs font-medium text-rose-500">
+                  { (validations?.filter((e:any)=>e.path=='mean'))[0]?.message }
+                </span>
+              )} 
             </div>
 
             <div>
@@ -597,6 +617,12 @@ export default function NotesPage() {
                 className="w-full resize-none rounded-xl border border-gray-300 px-4 py-2.5 text-black outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
                 placeholder="Explique o significado da palavra"
               />
+
+              {validations &&  Object.keys(validations).length != 0 && (
+                <span className="mt-1 block text-xs font-medium text-rose-500">
+                  { (validations?.filter((e:any)=>e.path=='description'))[0]?.message }
+                </span>
+              )} 
             </div>
 
             <div className="flex items-center gap-3 pt-1">

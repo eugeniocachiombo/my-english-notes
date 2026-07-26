@@ -4,7 +4,8 @@ export const errorZodMessages = (error: any) => {
     return NextResponse.json(
         {
             errors: error.issues.map((e:any) => ({
-                [e.path.join("")]: e.message
+                path: e.path,
+                message: e.message
             }))
         },
         { status: 422 }
