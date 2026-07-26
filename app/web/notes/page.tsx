@@ -9,6 +9,7 @@ import { alert_error, alert_success } from "@/app/services/sweet-alert.service";
 import { useEffect, useMemo, useState } from "react";
 import { getNotes, createNote, updateNote, removeNote } from "@/app/stores/note.store";
 import {
+  LogOut,
   BookMarked,
   BookOpenText,
   Type,
@@ -120,8 +121,6 @@ export default function NotesPage() {
     }
   }
 
-  
-
   async function remove(id: number) {
     try {
       await removeNote(id);
@@ -168,6 +167,31 @@ export default function NotesPage() {
   function cancelEdit() {
     setForm(notesData);
     setSheetOpen(false);
+  }
+
+  // Função para fechar ou sair da PWA
+  function handleExitApp() {
+    Swal.fire({
+      title: "Sair da aplicação?",
+      text: "Tens a certeza que desejas fechar a app?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sim, sair",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#f43f5e",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Tenta fechar a janela
+        window.close();
+
+        // Se o navegador bloquear o window.close(), redireciona para uma página neutra ou home
+        setTimeout(() => {
+          if (!window.closed) {
+            window.location.href = "about:blank";
+          }
+        }, 300);
+      }
+    });
   }
 
   useEffect(() => {
@@ -510,20 +534,35 @@ export default function NotesPage() {
       </div>
 
       {/* Botão flutuante para adicionar palavra */}
-      <button
-        type="button"
-        onClick={openAdd}
-        style={{ cursor: "pointer" }}
-        aria-label="Adicionar palavra"
-        className={`fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full
-        bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-600/40 transition
-        hover:scale-105 hover:shadow-emerald-600/50 active:scale-95
-        dark:from-emerald-400 dark:to-emerald-500 dark:shadow-emerald-500/30 ${
-          notes.length === 0 ? "animate-soft-pulse" : ""
-        }`}
-      >
-        <Plus className="h-6 w-6" />
-      </button>
+      <div className="fixed bottom-6 right-6 z-40 flex items-center gap-3">
+        {/* Botão flutuante para fechar / sair da PWA */}
+        <button
+          type="button"
+          onClick={handleExitApp}
+          style={{ cursor: "pointer" }}
+          aria-label="Sair da aplicação"
+          title="Sair da aplicação"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-500 text-white shadow-lg shadow-rose-600/30 transition hover:scale-105 hover:bg-rose-600 active:scale-95 dark:bg-rose-600 dark:shadow-rose-600/20 dark:hover:bg-rose-500"
+        >
+          <LogOut className="h-5 w-5" />
+        </button>
+
+        {/* Botão flutuante para adicionar palavra */}
+        <button
+          type="button"
+          onClick={openAdd}
+          style={{ cursor: "pointer" }}
+          aria-label="Adicionar palavra"
+          className={`flex h-14 w-14 items-center justify-center rounded-full
+          bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-600/40 transition
+          hover:scale-105 hover:shadow-emerald-600/50 active:scale-95
+          dark:from-emerald-400 dark:to-emerald-500 dark:shadow-emerald-500/30 ${
+            notes.length === 0 ? "animate-soft-pulse" : ""
+          }`}
+        >
+          <Plus className="h-6 w-6" />
+        </button>
+      </div>
 
       {/* Painel inferior (bottom sheet) para adicionar/editar */}
       <div
