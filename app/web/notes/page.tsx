@@ -45,7 +45,7 @@ export default function NotesPage() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<any>({});
-  const [validations, setValidations] = useState({});
+  const [validations, setValidations] = useState([{message: null}]);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<any>({});
 
